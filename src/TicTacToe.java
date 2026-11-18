@@ -12,46 +12,47 @@ public class TicTacToe {
     static void main() {
 
         Scanner in = new Scanner(System.in);
-        clearBoard();
+        String again = "Y";
+        while (again.equalsIgnoreCase("Y")) {
+            clearBoard();
+            String player = "X";
+            boolean gameOver = false;
 
-        String player = "X";
-        boolean gameOver = false;
-        while (!gameOver) {
-            display();
+            while (!gameOver) {
+                display();
+                System.out.print("Enter row 1 to 3: ");
+                int rowMove = in.nextInt();
+                System.out.print("Enter column 1 to 3: ");
+                int colMove = in.nextInt();
 
-            System.out.print("Enter row 1 to 3: ");
-            int rowMove = in.nextInt();
-            System.out.print("Enter column 1 to 3: ");
-            int colMove = in.nextInt();
+                rowMove = rowMove - 1;
+                colMove = colMove - 1;
 
-            rowMove = rowMove - 1;
-            colMove = colMove - 1;
-
-            if (isValidMove(rowMove, colMove)) {
-                board[rowMove][colMove] = player;
-                if (isWin(player)) {
-                    display();
-                    System.out.println("Player " + player + " wins");
-                    gameOver = true;
-                }
-                else if (isTie()){
-                    display();
-                    System.out.print("It's a tie.");
-                    gameOver = true;
-                }
-                else {
-                    if(player.equals("X")) {
-                        player = "O";
+                if (isValidMove(rowMove, colMove)) {
+                    board[rowMove][colMove] = player;
+                    if (isWin(player)) {
+                        display();
+                        System.out.println("Player " + player + " wins");
+                        gameOver = true;
+                    } else if (isTie()) {
+                        display();
+                        System.out.print("It's a tie.");
+                        gameOver = true;
+                    } else {
+                        if (player.equals("X")) {
+                            player = "O";
+                        } else {
+                            player = "X";
+                        }
                     }
-                    else {
-                        player = "X";
-                    }
+                } else {
+                    System.out.print("Invalid move");
                 }
+
             }
-            else {
-                System.out.print("Invalid move");
-            }
-            display();
+
+            System.out.println("Play again Y or N: ");
+            again = in.next();
 
         }
     }
@@ -103,24 +104,27 @@ public class TicTacToe {
         }
         return false;
     }
+
     private static boolean isColWin(String player) {
         for (int col = 0; col < COLS; col++) {
-            if (board[col][0].equals(player) && board[col][1].equals(player) && board[col][2].equals(player)) {
+            if (board[0][col].equals(player) && board[1][col].equals(player) && board[2][col].equals(player)) {
                 return true;
             }
         }
         return false;
     }
+
     private static boolean isDiagnolWin(String player) {
-        if (board[0][0].equals(player) && board[1][1].equals(player) && board[2][0].equals(player)) {
+        if (board[0][0].equals(player) && board[1][1].equals(player) && board[2][2].equals(player)) {
             return true;
         }
-        if (board[0][2].equals(player) && board[1][1].equals(player) && board[2][2].equals(player)) {
+        if (board[0][2].equals(player) && board[1][1].equals(player) && board[2][0].equals(player)) {
             return true;
         }
 
         return false;
     }
+
     private static boolean isTie() {
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
@@ -131,12 +135,16 @@ public class TicTacToe {
         }
         return true;
     }
+
     private static boolean isValidMove(int row, int col) {
         boolean retVal = false;
 
-        if (board[row][col].equals(" ")) {
-            retVal = true;
+        if (row >= 0 && row < ROWS && col >= 0 && col < COLS) {
+            if (board[row][col].equals(" ")) {
+                retVal = true;
+            }
         }
+
         return retVal;
     }
 }
